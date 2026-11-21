@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECH AI OIL ZAKHO - سيستەمێ ژمێریاریا بەنزينخانێ</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary: #10b981;
+            --danger: #ef4444;
+            --bg: #f1f5f9;
+            --card: #ffffff;
+            --text: #1e293b;
+            --border: #cbd5e1;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            padding: 15px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, #1e293b, #334155);
+            color: white;
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            position: relative;
+        }
+
+        /* ئایکۆنا بازنەیی یا مێژوو (History) ل گۆشەیا ڕاستێ */
+        .history-circle-btn {
+            position: absolute;
+            top: 18px;
+            right: 18px;
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(255, 255, 255, 0.25);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .history-circle-btn:hover {
+            background: var(--primary);
+            border-color: #60a5fa;
+            transform: scale(1.08);
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+        }
+
+        header p {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            background: var(--card);
+            color: var(--text);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        .counter-card {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 18px;
+            border-right: 6px solid var(--primary);
+            position: relative;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .card-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary);
+        }
+
+        .btn-remove-card {
+            background: #fee2e2;
+            color: var(--danger);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 0.85rem;
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            color: #475569;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            background-color: #f8fafc;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: var(--primary);
+            background-color: #fff;
+        }
+
+        .card-result {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+        }
+
+        .card-result strong {
+            color: #15803d;
+            font-size: 1.1rem;
+        }
+
+        .btn-add-counter {
+            width: 100%;
+            padding: 14px;
+            background: #eff6ff;
+            color: var(--primary);
+            border: 2px dashed var(--primary);
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-add-counter:hover {
+            background: #dbeafe;
+        }
+
+        .grand-total-card {
+            background: #0f172a;
+            color: white;
+            padding: 16px;
+            border-radius: 16px;
+            margin-bottom: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            text-align: center;
+        }
+
+        .grand-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .grand-item span {
+            display: block;
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        .grand-item strong {
+            font-size: 1.35rem;
+            color: #34d399;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 16px;
+            background: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.15rem;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            transition: background 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #059669;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: var(--card);
+            border: 2px solid var(--border);
+            padding: 15px 10px;
+            border-radius: 14px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .stat-box span {
+            display: block;
+            font-size: 0.82rem;
+            color: #64748b;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .stat-box strong {
+            font-size: 1.15rem;
+            color: var(--primary);
+            word-break: break-word;
+        }
+
+        .dollar-sub {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            color: #059669;
+            font-weight: bold;
+            background: #f0fdf4;
+            padding: 5px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+        }
+
+        .rate-card-box {
+            background: #eff6ff;
+            border: 2px solid #bfdbfe;
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        .rate-card-box label {
+            font-weight: bold;
+            color: #1e40af;
+            font-size: 0.95rem;
+        }
+
+        .rate-card-box input {
+            max-width: 200px;
+            background: white;
+            border-color: #93c5fd;
+            font-weight: bold;
+            color: #1e3a8a;
+            font-size: 1rem;
+            padding: 8px 12px;
+        }
+
+        .cash-inputs-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+
+        .cash-card-box {
+            background: #f0fdf4;
+            border: 2px solid #bbf7d0;
+            border-radius: 14px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 8px;
+        }
+
+        .cash-card-box label {
+            font-weight: bold;
+            color: #166534;
+            font-size: 0.85rem;
+        }
+
+        .cash-card-box input {
+            background: white;
+            border-color: #86efac;
+            font-weight: bold;
+            color: #15803d;
+            font-size: 0.95rem;
+            padding: 8px 10px;
+        }
+
+        .shortage-box {
+            background: #fff1f2;
+            border: 2px solid #fecdd3;
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .shortage-box span {
+            display: block;
+            font-size: 0.88rem;
+            color: #9f1239;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .shortage-box strong {
+            font-size: 1.4rem;
+            color: #e11d48;
+        }
+
+        .shortage-dollar {
+            margin-top: 5px;
+            font-size: 0.95rem;
+            color: #be123c;
+            font-weight: bold;
+        }
+
+        .withdraw-section {
+            background: #fffbeb;
+            border: 2px solid #fde68a;
+            border-radius: 14px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .withdraw-section h4 {
+            color: #b45309;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .withdraw-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .withdraw-card {
+            background: white;
+            border: 2px solid #fcd34d;
+            border-radius: 12px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .withdraw-card label {
+            font-size: 0.85rem;
+            font-weight: bold;
+            color: #92400e;
+        }
+
+        .withdraw-card input {
+            background: #fffdf4;
+            border-color: #fde68a;
+            color: #b45309;
+            font-weight: bold;
+            font-size: 1rem;
+            padding: 8px 10px;
+        }
+
+        .withdraw-sub-preview {
+            font-size: 0.82rem;
+            color: #d97706;
+            font-weight: bold;
+            background: #fef3c7;
+            padding: 5px 8px;
+            border-radius: 6px;
+            border: 1px solid #fde68a;
+            text-align: center;
+        }
+
+        .session-file-box {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 14px;
+            margin-bottom: 14px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+            overflow: hidden;
+            transition: border-color 0.2s;
+        }
+
+        .session-file-box:hover {
+            border-color: var(--primary);
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            cursor: pointer;
+            background-color: #ffffff;
+            user-select: none;
+        }
+
+        .session-header:hover {
+            background-color: #f8fafc;
+        }
+
+        .session-title {
+            font-weight: bold;
+            font-size: 1.05rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .arrow-icon {
+            font-size: 0.85rem;
+            transition: transform 0.3s ease;
+            color: #64748b;
+        }
+
+        .session-file-box.open .arrow-icon {
+            transform: rotate(180deg);
+            color: var(--primary);
+        }
+
+        .session-totals {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            flex-wrap: wrap;
+        }
+
+        .session-totals span {
+            background: #f0fdf4;
+            color: #166534;
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid #bbf7d0;
+            font-weight: bold;
+        }
+
+        .session-body {
+            display: none;
+            padding: 0 20px 20px 20px;
+            border-top: 2px solid #f1f5f9;
+            background-color: #fafbfc;
+        }
+
+        .session-file-box.open .session-body {
+            display: block;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin-top: 12px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        th, td {
+            padding: 11px 10px;
+            text-align: right;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: bold;
+            color: #334155;
+        }
+
+        .badge {
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        .bg-super { background: #8b5cf6; }
+        .bg-mohsen { background: #3b82f6; }
+        .bg-normal { background: #f59e0b; }
+        .bg-gaz { background: #475569; }
+        .bg-gas { background: #ec4899; }
+
+        .btn-delete {
+            background: #fee2e2;
+            color: var(--danger);
+            border: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .btn-delete:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        .data-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .btn-clear {
+            background: #fee2e2;
+            color: var(--danger);
+            border: 1px solid #fca5a5;
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .alert {
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .alert-success { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+        .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+
+        @media (max-width: 700px) {
+            .grid-inputs {
+                grid-template-columns: 1fr 1fr;
+            }
+            .stats-grid, .grand-total-card, .cash-inputs-row, .withdraw-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 8px;
+            }
+            .stat-box strong {
+                font-size: 1rem;
+            }
+            .grand-item strong {
+                font-size: 1.15rem;
+            }
+            .session-header, .rate-card-box {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            .rate-card-box input {
+                max-width: 100%;
+            }
+            .history-circle-btn {
+                top: 12px;
+                right: 12px;
+                width: 38px;
+                height: 38px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 450px) {
+            .grid-inputs, .withdraw-grid, .stats-grid, .cash-inputs-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <!-- ئایکۆنا بازنەیی یا مێژوو (History) ل گۆشەیا ڕاستێ -->
+        <div class="history-circle-btn" onclick="switchTab('history')" title="مێژوو (History)">
+            <span>🕒</span>
+        </div>
+        <h1>⛽ TECH AI OILduhok</h1>
+        <p>سیستەمێ ژمێریاریا بەنزينخانێ و حساب روزانە</p>
+    </header>
+
+    <!-- دو تابێن سەرەکی (تۆمارکرنا ڕۆژانە و حساب يومي) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('entry')">📝 تۆمارکرنا ڕۆژانە</button>
+        <button class="tab-btn" onclick="switchTab('daily')">📊 حساب يومي</button>
+    </div>
+
+    <div id="alertBox" class="alert"></div>
+
+    <!-- بەشێ تۆمارکرنێ -->
+    <div id="entrySection">
+        <div id="countersContainer"></div>
+
+        <button type="button" class="btn-add-counter" onclick="addCounterCard()">
+            <span style="font-size: 1.4rem;">➕</span> زێدەکرنا عەدادەکێ دی
+        </button>
+
+        <div class="grand-total-card">
+            <div class="grand-item">
+                <span>سەرجەمێ لیترێن ئەڤرۆ</span>
+                <strong id="grandLiters">0 لیتر</strong>
+            </div>
+            <div class="grand-item">
+                <span>کۆژمێ گشتی یێ پاران</span>
+                <strong id="grandMoney">0 دینار</strong>
+            </div>
+        </div>
+
+        <button class="btn-save" onclick="saveAllCounters()">
+            <span>💾</span> خەزنکرن و دروستکرنا فایلا نووی
+        </button>
+    </div>
+
+    <!-- بەشێ حساب يومي -->
+    <div id="dailySection" class="hidden">
+        <div class="rate-card-box">
+            <label for="dollarRate">💵 بهایێ 100 دۆلاران ب دینار:</label>
+            <input type="number" id="dollarRate" placeholder="بۆ نموونە: 157500" oninput="renderAllData()">
+        </div>
+
+        <div class="cash-inputs-row">
+            <div class="cash-card-box">
+                <label for="cashOnHandDinar">💵 پارەیێ ل بەر دەست (ب دینار):</label>
+                <input type="number" id="cashOnHandDinar" placeholder="بۆ نموونە: 4000000" oninput="renderAllData()">
+            </div>
+            <div class="cash-card-box">
+                <label for="cashOnHandDollar">💲 پارەیێ ل بەر دەست (ب دۆلار):</label>
+                <input type="number" id="cashOnHandDollar" placeholder="بۆ نموونە: 1000" oninput="renderAllData()">
+            </div>
+        </div>
+
+        <div class="shortage-box">
+            <span>⚠️ بڕێ کێماسیێ (پارەیێ کێم ل دەف کۆژمێ ڕۆژی)</span>
+            <strong id="shortageDinr">0 دینار</strong>
+            <div class="shortage-dollar" id="shortageDollar">≈ 0.00 $</div>
+        </div>
+
+        <!-- بەشێ سحبکرنا پارەی -->
+        <div class="withdraw-section">
+            <h4>💸 پارەیێ هاتیە سحبکرن (ژلایێ خودانێ بەنزینخانێ ڤە):</h4>
+            <div class="withdraw-grid">
+                <div class="withdraw-card">
+                    <label for="withdrawnDinar">سحبکرن ب دینار (د.ع):</label>
+                    <input type="number" id="withdrawnDinar" placeholder="بۆ نموونە: 500000" oninput="renderAllData()">
+                    <div class="withdraw-sub-preview" id="previewWithdrawnDollar">≈ 0.00 $</div>
+                </div>
+                <div class="withdraw-card">
+                    <label for="withdrawnDollar">سحبکرن ب دۆلار ($):</label>
+                    <input type="number" id="withdrawnDollar" placeholder="بۆ نموونە: 200" oninput="renderAllData()">
+                    <div class="withdraw-sub-preview" id="previewWithdrawnDinar">≈ 0 دینار</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid" style="margin-bottom: 20px;">
+            <div class="stat-box" style="grid-column: span 2; padding: 25px 15px;">
+                <span id="dayBoxLabel" style="font-size: 1rem;">📅 کۆژمێ ڕۆژی (دویماهی فایل)</span>
+                <strong id="statDay" style="font-size: 1.8rem;">0 دینار</strong>
+                <div class="dollar-sub" id="statDayDollar" style="font-size: 1.1rem; padding: 8px;">0 $</div>
+            </div>
+        </div>
+
+        <button class="btn-save" onclick="saveDailyShortage()" style="background: var(--primary);">
+            <span>💾</span> خەزنکرنا حسابا ئەڤرۆ و پارەیێ سحبکری بۆ مێژووی
+        </button>
+    </div>
+
+    <!-- بەشێ مێژوو (History) -->
+    <div id="historySection" class="hidden">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3 style="color: #1e293b;">📁 مێژووا فایلیێن خەزنکری و حسابان</h3>
+            <button class="tab-btn" style="flex: 0; padding: 8px 15px; font-size: 0.9rem;" onclick="switchTab('entry')">⬅️ ڤەگەر بۆ سەرەکی</button>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px;">
+            <!-- ١. کۆژمێ گشتی یێ مەهی -->
+            <div class="stat-box" style="background: #0f172a; color: white; border-color: #334155; padding: 18px 10px;">
+                <span style="color: #94a3b8; font-size: 0.82rem;">🗓️ کۆژمێ گشتی یێ مەهی</span>
+                <strong id="statMonth" style="color: #34d399; font-size: 1.4rem;">0 دینار</strong>
+                <div class="dollar-sub" id="statMonthDollar" style="background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: #34d399; font-size: 0.85rem; padding: 5px;">0 $</div>
+            </div>
+
+            <!-- ٢. کۆژمێ پارەیێ مایی -->
+            <div class="stat-box" style="background: #f0fdf4; border-color: #bbf7d0; padding: 18px 10px;">
+                <span style="color: #166534; font-size: 0.82rem;">💰 کۆژمێ پارەیێ مایی</span>
+                <strong id="statTotalRemaining" style="color: #15803d; font-size: 1.3rem;">0 دینار</strong>
+                <div class="dollar-sub" id="statTotalRemainingDollar" style="background: #dcfce7; border-color: #86efac; color: #166534; font-size: 0.85rem; padding: 5px;">0 $</div>
+            </div>
+
+            <!-- ٣. کۆژمێ سحبکرنێ گشتی (ب هەردو دینار و دۆلاران) -->
+            <div class="stat-box" style="background: #fffbeb; border-color: #fde68a; padding: 18px 10px;">
+                <span style="color: #b45309; font-size: 0.82rem;">💸 کۆژمێ سحبکرنێ گشتی</span>
+                <strong id="statTotalWithdrawn" style="color: #d97706; font-size: 1.2rem;">0 دینار</strong>
+                <div class="dollar-sub" id="statTotalWithdrawnDollar" style="background: #fef3c7; border-color: #fde68a; color: #b45309; font-size: 0.82rem; padding: 5px;">0 $</div>
+            </div>
+
+            <!-- ٤. کۆژمێ گشتی یێ کێماسییان -->
+            <div class="stat-box" style="background: #fff1f2; border-color: #fecdd3; padding: 18px 10px;">
+                <span style="color: #9f1239; font-size: 0.82rem;">⚠️ کۆژمێ گشتی یێ کێماسییان</span>
+                <strong id="statTotalShortage" style="color: #e11d48; font-size: 1.3rem;">0 دینار</strong>
+                <div class="dollar-sub" id="statTotalShortageDollar" style="background: #ffe4e6; border-color: #fecdd3; color: #be123c; font-size: 0.85rem; padding: 5px;">0 $</div>
+            </div>
+        </div>
+
+        <div class="data-actions">
+            <h3 style="color: #334155;">فایلیێن کەڤن و حساب</h3>
+            <button class="btn-clear" onclick="clearAllData()">🗑️ ژێبرنا هەمیان</button>
+        </div>
+
+        <div id="sessionsContainer"></div>
+
+        <p id="emptyMsg" style="text-align: center; color: #64748b; padding: 30px; background: var(--card); border-radius: 16px;">چ فایل یان داتا نەهاتینە خەزنکرن.</p>
+    </div>
+</div>
+
+<script>
+    let counterIndex = 0;
+
+    window.onload = function() {
+        const activeCounters = JSON.parse(localStorage.getItem('activeCountersState'));
+        if (activeCounters && activeCounters.length > 0) {
+            activeCounters.forEach(item => {
+                addCounterCard(item.fuelType, item.literPrice, item.oldCounter);
+            });
+        } else {
+            addCounterCard('سۆپەر', '', '');
+        }
+
+        const savedRate = localStorage.getItem('savedDollarRate');
+        if (savedRate) document.getElementById('dollarRate').value = savedRate;
+
+        const savedCashDinar = localStorage.getItem('savedCashOnHandDinar');
+        if (savedCashDinar) document.getElementById('cashOnHandDinar').value = savedCashDinar;
+
+        const savedCashDollar = localStorage.getItem('savedCashOnHandDollar');
+        if (savedCashDollar) document.getElementById('cashOnHandDollar').value = savedCashDollar;
+
+        const savedWithDinar = localStorage.getItem('savedWithdrawnDinar');
+        if (savedWithDinar) document.getElementById('withdrawnDinar').value = savedWithDinar;
+
+        const savedWithDollar = localStorage.getItem('savedWithdrawnDollar');
+        if (savedWithDollar) document.getElementById('withdrawnDollar').value = savedWithDollar;
+
+        renderAllData();
+    };
+
+    function addCounterCard(fuelType = 'سۆپەر', price = '', oldVal = '') {
+        counterIndex++;
+        const container = document.getElementById('countersContainer');
+        const currentCount = container.children.length + 1;
+
+        const card = document.createElement('div');
+        card.className = 'counter-card';
+        card.id = `card_${counterIndex}`;
+
+        card.innerHTML = `
+            <div class="card-header">
+                <div class="card-title">⛽ عەدادێ ژمارە (<span class="card-num">${currentCount}</span>)</div>
+                <button type="button" class="btn-remove-card" onclick="removeCounterCard('card_${counterIndex}')">✖ لابردن</button>
+            </div>
+            <div class="grid-inputs">
+                <div class="form-group">
+                    <label>جۆرێ سووتەمەنیێ:</label>
+                    <select class="fuel-type" onchange="calculateAll()">
+                        <option value="سۆپەر" ${fuelType === 'سۆپەر' ? 'selected' : ''}>بەنزینا سۆپەر</option>
+                        <option value="موحەسەن" ${fuelType === 'موحەسەن' ? 'selected' : ''}>بەنزینا موحەسەن</option>
+                        <option value="عادی" ${fuelType === 'عادی' ? 'selected' : ''}>بەنزینا عادی</option>
+                        <option value="گاز" ${fuelType === 'گاز' ? 'selected' : ''}>گاز (دیزڵ)</option>
+                        <option value="غاز" ${fuelType === 'غاز' ? 'selected' : ''}>غاز (LPG)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>بهایێ لترێ (دینار):</label>
+                    <input type="number" class="liter-price" value="${price}" placeholder="بۆ نموونە: 850" oninput="calculateAll()">
+                </div>
+                <div class="form-group">
+                    <label>عەدادێ کەڤن (دوهی):</label>
+                    <input type="number" class="old-counter" value="${oldVal}" placeholder="ژمارا کەڤن" oninput="calculateAll()">
+                </div>
+                <div class="form-group">
+                    <label>عەدادێ نووی (پشتی ٢٤ دەمژمێران):</label>
+                    <input type="number" class="new-counter" placeholder="ژمارا نووی" oninput="calculateAll()">
+                </div>
+            </div>
+            <div class="card-result">
+                <span>لیترێن چووین: <strong class="row-liters" style="color:#2563eb;">0 لیتر</strong></span>
+                <span>بهایێ ڤی عەدادی: <strong class="row-money">0 دینار</strong></span>
+            </div>
+        `;
+
+        container.appendChild(card);
+        updateCardNumbers();
+        calculateAll();
+    }
+
+    function removeCounterCard(cardId) {
+        const container = document.getElementById('countersContainer');
+        if (container.children.length <= 1) {
+            showAlert('پێدڤیە ب لایەنێ کێم ئێک عەداد هەبیت!', 'error');
+            return;
+        }
+        document.getElementById(cardId).remove();
+        updateCardNumbers();
+        calculateAll();
+    }
+
+    function updateCardNumbers() {
+        const cards = document.querySelectorAll('.counter-card');
+        cards.forEach((card, index) => {
+            card.querySelector('.card-num').innerText = index + 1;
+        });
+    }
+
+    function calculateAll() {
+        const cards = document.querySelectorAll('.counter-card');
+        let grandLiters = 0;
+        let grandMoney = 0;
+
+        cards.forEach(card => {
+            const price = parseFloat(card.querySelector('.liter-price').value) || 0;
+            const oldVal = parseFloat(card.querySelector('.old-counter').value) || 0;
+            const newVal = parseFloat(card.querySelector('.new-counter').value) || 0;
+
+            let soldLiters = 0;
+            if (newVal >= oldVal && newVal > 0) {
+                soldLiters = newVal - oldVal;
+            }
+
+            const totalMoney = soldLiters * price;
+
+            card.querySelector('.row-liters').innerText = soldLiters.toLocaleString() + ' لیتر';
+            card.querySelector('.row-money').innerText = totalMoney.toLocaleString() + ' دینار';
+
+            grandLiters += soldLiters;
+            grandMoney += totalMoney;
+        });
+
+        document.getElementById('grandLiters').innerText = grandLiters.toLocaleString() + ' لیتر';
+        document.getElementById('grandMoney').innerText = grandMoney.toLocaleString() + ' دینار';
+    }
+
+    function saveAllCounters() {
+        const cards = document.querySelectorAll('.counter-card');
+        const sessionItems = [];
+        const nextDayState = [];
+        let hasError = false;
+        let sessionTotalLiters = 0;
+        let sessionTotalMoney = 0;
+
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-GB') + ' - ' + now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        const rawDate = now.toISOString().split('T')[0];
+
+        cards.forEach((card, index) => {
+            const fuelType = card.querySelector('.fuel-type').value;
+            const literPrice = parseFloat(card.querySelector('.liter-price').value);
+            const oldCounter = parseFloat(card.querySelector('.old-counter').value);
+            const newCounter = parseFloat(card.querySelector('.new-counter').value);
+
+            if (isNaN(literPrice) || isNaN(oldCounter) || isNaN(newCounter)) {
+                showAlert(`هیڤیدارین هەمی خانێن عەدادێ ژمارە (${index + 1}) پڕ بکە!`, 'error');
+                hasError = true;
+                return;
+            }
+
+            if (newCounter < oldCounter) {
+                showAlert(`ل عەدادێ ژمارە (${index + 1})، نابیت ژمارا نووی ژ یا کەڤن کێمتر بیت!`, 'error');
+                hasError = true;
+                return;
+            }
+
+            const soldLiters = newCounter - oldCounter;
+            const totalMoney = soldLiters * literPrice;
+
+            sessionTotalLiters += soldLiters;
+            sessionTotalMoney += totalMoney;
+
+            sessionItems.push({
+                counterName: `عەدادێ ${index + 1}`,
+                fuelType: fuelType,
+                literPrice: literPrice,
+                oldCounter: oldCounter,
+                newCounter: newCounter,
+                soldLiters: soldLiters,
+                totalMoney: totalMoney
+            });
+
+            nextDayState.push({
+                fuelType: fuelType,
+                literPrice: literPrice,
+                oldCounter: newCounter
+            });
+        });
+
+        if (hasError) return;
+
+        const newSession = {
+            sessionId: Date.now(),
+            rawDate: rawDate,
+            dateStr: dateStr,
+            totalLiters: sessionTotalLiters,
+            totalMoney: sessionTotalMoney,
+            items: sessionItems
+        };
+
+        let sessions = JSON.parse(localStorage.getItem('gasStationSessions')) || [];
+        sessions.unshift(newSession);
+        localStorage.setItem('gasStationSessions', JSON.stringify(sessions));
+
+        localStorage.setItem('activeCountersState', JSON.stringify(nextDayState));
+
+        cards.forEach((card, index) => {
+            card.querySelector('.old-counter').value = nextDayState[index].oldCounter;
+            card.querySelector('.new-counter').value = '';
+        });
+
+        calculateAll();
+        showAlert('ب سەرکەفتیانە عەداد هاتە خەزنکرن!', 'success');
+    }
+
+    function saveDailyShortage() {
+        const sessions = JSON.parse(localStorage.getItem('gasStationSessions')) || [];
+        if (sessions.length === 0) {
+            showAlert('چ فایلا سەرەکی نینە تاکو حسابا وێ بهێتە خەزنکرن!', 'error');
+            return;
+        }
+
+        const latestSession = sessions[0];
+        const dollarRate100 = parseFloat(document.getElementById('dollarRate').value) || 0;
+        const cashDinar = parseFloat(document.getElementById('cashOnHandDinar').value) || 0;
+        const cashDollar = parseFloat(document.getElementById('cashOnHandDollar').value) || 0;
+        
+        const withdrawnDinar = parseFloat(document.getElementById('withdrawnDinar').value) || 0;
+        const withdrawnDollar = parseFloat(document.getElementById('withdrawnDollar').value) || 0;
+
+        const ratePerDollar = dollarRate100 > 0 ? (dollarRate100 / 100) : 0;
+        const totalCashDinar = cashDinar + (cashDollar * ratePerDollar);
+        
+        let shortage = latestSession.totalMoney - totalCashDinar;
+        if (shortage < 0) shortage = 0;
+
+        latestSession.cashDinar = cashDinar;
+        latestSession.cashDollar = cashDollar;
+        latestSession.shortage = Math.round(shortage);
+        latestSession.dollarRate100 = dollarRate100;
+        latestSession.withdrawnDinar = withdrawnDinar;
+        latestSession.withdrawnDollar = withdrawnDollar;
+
+        localStorage.setItem('gasStationSessions', JSON.stringify(sessions));
+        showAlert('حساب، سحبکرن و کێماسییا ئەڤرۆ ب سەرکەفتیانە هاتە خەزنکرن بۆ مێژووی!', 'success');
+        
+        switchTab('history');
+    }
+
+    function switchTab(tab) {
+        const entrySec = document.getElementById('entrySection');
+        const dailySec = document.getElementById('dailySection');
+        const historySec = document.getElementById('historySection');
+        const btns = document.querySelectorAll('.tabs .tab-btn');
+
+        entrySec.classList.add('hidden');
+        dailySec.classList.add('hidden');
+        historySec.classList.add('hidden');
+        btns.forEach(b => b.classList.remove('active'));
+
+        if (tab === 'entry') {
+            entrySec.classList.remove('hidden');
+            if (btns[0]) btns[0].classList.add('active');
+        } else if (tab === 'daily') {
+            dailySec.classList.remove('hidden');
+            if (btns[1]) btns[1].classList.add('active');
+            renderAllData();
+        } else if (tab === 'history') {
+            historySec.classList.remove('hidden');
+            renderAllData();
+        }
+    }
+
+    function toggleFile(sessionId) {
+        const box = document.getElementById(`file_box_${sessionId}`);
+        if (box) {
+            box.classList.toggle('open');
+            const folderIcon = box.querySelector('.folder-icon');
+            folderIcon.innerText = box.classList.contains('open') ? '📂' : '📁';
+        }
+    }
+
+    function renderAllData() {
+        const sessions = JSON.parse(localStorage.getItem('gasStationSessions')) || [];
+        const container = document.getElementById('sessionsContainer');
+        const emptyMsg = document.getElementById('emptyMsg');
+
+        const dollarRateInput = document.getElementById('dollarRate').value;
+        const dollarRate100 = parseFloat(dollarRateInput) || 0;
+        localStorage.setItem('savedDollarRate', dollarRateInput);
+
+        const cashDinarInput = document.getElementById('cashOnHandDinar').value;
+        const cashDinar = parseFloat(cashDinarInput) || 0;
+        localStorage.setItem('savedCashOnHandDinar', cashDinarInput);
+
+        const cashDollarInput = document.getElementById('cashOnHandDollar').value;
+        const cashDollar = parseFloat(cashDollarInput) || 0;
+        localStorage.setItem('savedCashOnHandDollar', cashDollarInput);
+
+        const withDinarInput = document.getElementById('withdrawnDinar').value;
+        localStorage.setItem('savedWithdrawnDinar', withDinarInput);
+
+        const withDollarInput = document.getElementById('withdrawnDollar').value;
+        localStorage.setItem('savedWithdrawnDollar', withDollarInput);
+
+        const ratePerDollar = dollarRate100 > 0 ? (dollarRate100 / 100) : 0;
+        const wDinar = parseFloat(withDinarInput) || 0;
+        const wDollar = parseFloat(withDollarInput) || 0;
+
+        if (ratePerDollar > 0) {
+            const previewDollar = wDinar / ratePerDollar;
+            const previewDinar = wDollar * ratePerDollar;
+            document.getElementById('previewWithdrawnDollar').innerText = '≈ ' + previewDollar.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $';
+            document.getElementById('previewWithdrawnDinar').innerText = '≈ ' + Math.round(previewDinar).toLocaleString() + ' دینار';
+        } else {
+            document.getElementById('previewWithdrawnDollar').innerText = '≈ 0.00 $';
+            document.getElementById('previewWithdrawnDinar').innerText = '≈ 0 دینار';
+        }
+
+        container.innerHTML = '';
+
+        if (sessions.length === 0) {
+            emptyMsg.style.display = 'block';
+            document.getElementById('dayBoxLabel').innerText = '📅 کۆژمێ ڕۆژی (دویماهی فایل)';
+            document.getElementById('statDay').innerText = '0 دینار';
+            document.getElementById('statDayDollar').innerText = '0 $';
+            document.getElementById('statMonth').innerText = '0 دینار';
+            document.getElementById('statMonthDollar').innerText = '0 $';
+            document.getElementById('statTotalWithdrawn').innerText = '0 دینار';
+            document.getElementById('statTotalWithdrawnDollar').innerText = '0 $';
+            document.getElementById('statTotalRemaining').innerText = '0 دینار';
+            document.getElementById('statTotalRemainingDollar').innerText = '0 $';
+            document.getElementById('statTotalShortage').innerText = '0 دینار';
+            document.getElementById('statTotalShortageDollar').innerText = '0 $';
+            document.getElementById('shortageDinr').innerText = '0 دینار';
+            document.getElementById('shortageDollar').innerText = '≈ 0.00 $';
+            return;
+        }
+
+        emptyMsg.style.display = 'none';
+
+        const latestSession = sessions[0];
+        const sumLatestFile = latestSession.totalMoney;
+        document.getElementById('dayBoxLabel').innerText = `📅 کۆژمێ ڕۆژی (${latestSession.dateStr.split(' - ')[0]})`;
+
+        let sumMonthTotal = 0;
+        let sumWithdrawnDinar = 0;
+        let sumWithdrawnDollar = 0;
+        let sumTotalShortage = 0;
+
+        sessions.forEach((session, idx) => {
+            sumMonthTotal += session.totalMoney;
+            sumWithdrawnDinar += (session.withdrawnDinar || 0);
+            sumWithdrawnDollar += (session.withdrawnDollar || 0);
+            sumTotalShortage += (session.shortage || 0);
+
+            let rowsHtml = '';
+            session.items.forEach(item => {
+                let badgeClass = 'bg-normal';
+                if (item.fuelType === 'سۆپەر') badgeClass = 'bg-super';
+                if (item.fuelType === 'موحەسەن') badgeClass = 'bg-mohsen';
+                if (item.fuelType === 'گاز') badgeClass = 'bg-gaz';
+                if (item.fuelType === 'غاز') badgeClass = 'bg-gas';
+
+                rowsHtml += `
+                    <tr>
+                        <td style="font-weight:bold;">${item.counterName}</td>
+                        <td><span class="badge ${badgeClass}">${item.fuelType}</span></td>
+                        <td>${item.oldCounter.toLocaleString()}</td>
+                        <td><strong>${item.newCounter.toLocaleString()}</strong></td>
+                        <td style="color:#2563eb; font-weight:bold;">${item.soldLiters.toLocaleString()} L</td>
+                        <td>${item.literPrice.toLocaleString()}</td>
+                        <td style="color:#15803d; font-weight:bold;">${item.totalMoney.toLocaleString()} دینار</td>
+                    </tr>
+                `;
+            });
+
+            let detailsHtml = '';
+            if (session.shortage !== undefined || session.withdrawnDinar > 0 || session.withdrawnDollar > 0) {
+                detailsHtml = `
+                    <div style="margin-top: 12px; padding: 12px; background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; font-size: 0.9rem; color: #92400e;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px; flex-wrap: wrap; gap: 5px;">
+                            <span>📅 <strong>تاریخ:</strong> ${session.dateStr}</span>
+                            <span>⚠️ <strong>کێماسی:</strong> ${(session.shortage || 0).toLocaleString()} دینار</span>
+                        </div>
+                        <div style="border-top: 1px dashed #fcd34d; padding-top: 6px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 5px;">
+                            <span>💸 <strong>پارەیێ هاتیە سحبکرن:</strong> (دینار: ${(session.withdrawnDinar || 0).toLocaleString()} | دۆلار: ${(session.withdrawnDollar || 0).toLocaleString()} $)</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const fileNumber = sessions.length - idx;
+            const sessionBox = document.createElement('div');
+            sessionBox.className = 'session-file-box';
+            sessionBox.id = `file_box_${session.sessionId}`;
+            
+            sessionBox.innerHTML = `
+                <div class="session-header" onclick="toggleFile(${session.sessionId})">
+                    <div class="session-title">
+                        <span class="folder-icon" style="font-size: 1.3rem;">📁</span>
+                        <span>فایلا ژمارە (${fileNumber})</span>
+                        <span style="color: #64748b; font-size: 0.85rem; font-weight: normal;">(${session.dateStr})</span>
+                    </div>
+                    <div class="session-totals">
+                        <span>لیتر: ${session.totalLiters.toLocaleString()} L</span>
+                        <span>کۆژم: ${session.totalMoney.toLocaleString()} د.ع</span>
+                        <button class="btn-delete" onclick="event.stopPropagation(); deleteSession(${session.sessionId})">ژێبرن</button>
+                        <span class="arrow-icon">▼</span>
+                    </div>
+                </div>
+                <div class="session-body">
+                    <div class="table-responsive">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>عەداد</th>
+                                    <th>جۆرێ سووتەمەنیێ</th>
+                                    <th>عەدادێ کەڤن</th>
+                                    <th>عەدادێ نووی</th>
+                                    <th>لیترێن چووین</th>
+                                    <th>بهایێ لترێ</th>
+                                    <th>کۆژمێ پاران</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${rowsHtml}
+                            </tbody>
+                        </table>
+                    </div>
+                    ${detailsHtml}
+                </div>
+            `;
+            container.appendChild(sessionBox);
+        });
+
+        let combinedWithdrawnDinar = sumWithdrawnDinar;
+        let combinedWithdrawnDollar = sumWithdrawnDollar;
+
+        if (ratePerDollar > 0) {
+            combinedWithdrawnDinar += (sumWithdrawnDollar * ratePerDollar);
+            combinedWithdrawnDollar += (sumWithdrawnDinar / ratePerDollar);
+        }
+
+        const totalWithdrawnInDinar = sumWithdrawnDinar + (sumWithdrawnDollar * ratePerDollar);
+        let totalRemainingDinar = sumMonthTotal - totalWithdrawnInDinar;
+        if (totalRemainingDinar < 0) totalRemainingDinar = 0;
+
+        const cashDollarInDinar = cashDollar * ratePerDollar;
+        const totalCashOnHandDinar = cashDinar + cashDollarInDinar;
+
+        let shortageDinr = sumLatestFile - totalCashOnHandDinar;
+        if (shortageDinr < 0) shortageDinr = 0;
+
+        let latestDollar = 0;
+        let monthDollar = 0;
+        let totalRemainingDollarVal = 0;
+        let totalShortageDollarVal = 0;
+        let shortageDollar = 0;
+
+        if (ratePerDollar > 0) {
+            latestDollar = sumLatestFile / ratePerDollar;
+            monthDollar = sumMonthTotal / ratePerDollar;
+            totalRemainingDollarVal = totalRemainingDinar / ratePerDollar;
+            totalShortageDollarVal = sumTotalShortage / ratePerDollar;
+            shortageDollar = shortageDinr / ratePerDollar;
+        }
+
+        document.getElementById('statDay').innerText = sumLatestFile.toLocaleString() + ' دینار';
+        document.getElementById('statDayDollar').innerText = '≈ ' + latestDollar.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $';
+
+        document.getElementById('statMonth').innerText = sumMonthTotal.toLocaleString() + ' دینار';
+        document.getElementById('statMonthDollar').innerText = '≈ ' + monthDollar.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $';
+
+        document.getElementById('statTotalWithdrawn').innerText = Math.round(combinedWithdrawnDinar).toLocaleString() + ' د.ع';
+        document.getElementById('statTotalWithdrawnDollar').innerText = '≈ ' + combinedWithdrawnDollar.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $';
+
+        document.getElementById('statTotalRemaining').innerText = Math.round(totalRemainingDinar).toLocaleString() + ' د.ع';
+        document.getElementById('statTotalRemainingDollar').innerText = '≈ ' + totalRemainingDollarVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $';
+
+        document.getElementById('statTotalShortage').innerText = sumTotalShortage.toLocaleString() + ' دینار';
+        document.getElementById('statTotalShortageDollar').innerText = '≈ ' + totalShortageDollarVal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $';
+
+        document.getElementById('shortageDinr').innerText = Math.round(shortageDinr).toLocaleString() + ' دینار';
+        document.getElementById('shortageDollar').innerText = '≈ ' + shortageDollar.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' $';
+    }
+
+    function deleteSession(sessionId) {
+        if (confirm('تە دڤێت ئەڤ فایلا خەزنکرنێ بهێتە ژێبرن؟')) {
+            let sessions = JSON.parse(localStorage.getItem('gasStationSessions')) || [];
+            sessions = sessions.filter(s => s.sessionId !== sessionId);
+            localStorage.setItem('gasStationSessions', JSON.stringify(sessions));
+            renderAllData();
+        }
+    }
+
+    function clearAllData() {
+        if (confirm('ئاگەهداری! دێ هەمی فایلیێن خەزنکری هێنە ژێبرن، تۆ پشتڕاستی؟')) {
+            localStorage.removeItem('gasStationSessions');
+            renderAllData();
+        }
+    }
+
+    function showAlert(msg, type) {
+        const alertBox = document.getElementById('alertBox');
+        alertBox.innerText = msg;
+        alertBox.className = 'alert ' + (type === 'success' ? 'alert-success' : 'alert-error');
+        alertBox.style.display = 'block';
+        setTimeout(() => {
+            alertBox.style.display = 'none';
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>
